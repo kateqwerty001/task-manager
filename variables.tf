@@ -1,0 +1,9 @@
+variable "project_id" {
+  description = "The ID of the GCP project"
+  default     = "project-f030ec6e-8d7b-4d6a-9e3"
+}
+
+variable "region" {
+  description = "The region to deploy resources into (Warsaw, Poland)"
+  default     = "europe-central2"
+}
