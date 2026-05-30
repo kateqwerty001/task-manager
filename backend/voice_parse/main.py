@@ -8,8 +8,8 @@ from openai import OpenAI  # openai package works with Grok's API
 
 GOOGLE_CLIENT_ID = os.environ.get("GOOGLE_CLIENT_ID", "")
 LLM_API_KEY = os.environ.get("LLM_API_KEY", "")
-LLM_BASE_URL = os.environ.get("LLM_BASE_URL", "https://api.x.ai/v1")
-LLM_MODEL = os.environ.get("LLM_MODEL", "grok-3-mini")
+LLM_BASE_URL = os.environ.get("LLM_BASE_URL", "https://generativelanguage.googleapis.com/v1beta/openai/")
+LLM_MODEL = os.environ.get("LLM_MODEL", "gemini-2.5-flash")
 MAX_CHARS_PROMPT = 1000
 SYSTEM_PROMPT = """
 You are a task extraction assistant. The user will describe a task verbally.
