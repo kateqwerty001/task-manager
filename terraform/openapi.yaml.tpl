@@ -126,3 +126,49 @@ paths:
       responses:
         "204":
           description: Deleted
+
+  /voice/parse:
+    options:
+      summary: CORS preflight for /voice/parse
+      operationId: corsVoiceParse
+      x-google-backend:
+        address: ${voice_parse_uri}
+        path_translation: CONSTANT_ADDRESS
+      responses:
+        "204":
+          description: CORS preflight
+    post:
+      summary: Parse voice transcript into task fields
+      operationId: voiceParse
+      x-google-quota:
+        metricCosts:
+          task-manager-requests: 1
+      x-google-backend:
+        address: ${voice_parse_uri}
+        path_translation: CONSTANT_ADDRESS
+      responses:
+        "200":
+          description: Parsed task fields
+
+  /admin/analytics:
+    options:
+      summary: CORS preflight for /admin/analytics
+      operationId: corsAdminAnalytics
+      x-google-backend:
+        address: ${admin_analytics_uri}
+        path_translation: CONSTANT_ADDRESS
+      responses:
+        "204":
+          description: CORS preflight
+    get:
+      summary: Admin analytics dashboard data
+      operationId: adminAnalytics
+      x-google-quota:
+        metricCosts:
+          task-manager-requests: 1
+      x-google-backend:
+        address: ${admin_analytics_uri}
+        path_translation: CONSTANT_ADDRESS
+      responses:
+        "200":
+          description: Analytics summary

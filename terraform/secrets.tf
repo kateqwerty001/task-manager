@@ -14,9 +14,14 @@ resource "google_secret_manager_secret" "oauth_id" {
   depends_on = [google_project_service.apis]
 }
 
-resource "google_secret_manager_secret_iam_member" "secret_access" {
-  for_each  = toset([google_secret_manager_secret.oauth_id.id, google_secret_manager_secret.llm_key.id])
-  secret_id = each.value
+resource "google_secret_manager_secret_iam_member" "oauth_id_access" {
+  secret_id = google_secret_manager_secret.oauth_id.id
+  role      = "roles/secretmanager.secretAccessor"
+  member    = "serviceAccount:task-manager-sa@${var.project_id}.iam.gserviceaccount.com"
+}
+
+resource "google_secret_manager_secret_iam_member" "llm_key_access" {
+  secret_id = google_secret_manager_secret.llm_key.id
   role      = "roles/secretmanager.secretAccessor"
   member    = "serviceAccount:task-manager-sa@${var.project_id}.iam.gserviceaccount.com"
 }

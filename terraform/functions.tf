@@ -21,6 +21,14 @@ locals {
       entry_point = "delete_task"
       source_dir  = "${path.module}/../backend/delete_task"
     }
+    voice_parse = {
+      entry_point = "voice_parse"
+      source_dir  = "${path.module}/../backend/voice_parse"
+    }
+    admin_analytics = {
+      entry_point = "admin_analytics"
+      source_dir  = "${path.module}/../backend/admin_analytics"
+    }
   }
 }
 
@@ -80,6 +88,16 @@ resource "google_cloudfunctions2_function" "crud" {
       project_id = var.project_id
       secret     = google_secret_manager_secret.oauth_id.secret_id
       version    = "latest"
+    }
+
+    dynamic "secret_environment_variables" {
+      for_each = each.key == "voice_parse" && var.enable_llm_api_key ? [1] : []
+      content {
+        key        = "LLM_API_KEY"
+        project_id = var.project_id
+        secret     = google_secret_manager_secret.llm_key.secret_id
+        version    = "latest"
+      }
     }
   }
 

@@ -22,11 +22,13 @@ resource "google_api_gateway_api_config" "task_manager" {
     document {
       path = "openapi.yaml"
       contents = base64encode(templatefile("${path.module}/openapi.yaml.tpl", {
-          list_tasks_uri  = google_cloudfunctions2_function.crud["list_tasks"].url
-          get_task_uri    = google_cloudfunctions2_function.crud["get_task"].url
-          create_task_uri = google_cloudfunctions2_function.crud["create_task"].url
-          update_task_uri = google_cloudfunctions2_function.crud["update_task"].url
-          delete_task_uri = google_cloudfunctions2_function.crud["delete_task"].url
+          list_tasks_uri       = google_cloudfunctions2_function.crud["list_tasks"].url
+          get_task_uri         = google_cloudfunctions2_function.crud["get_task"].url
+          create_task_uri      = google_cloudfunctions2_function.crud["create_task"].url
+          update_task_uri      = google_cloudfunctions2_function.crud["update_task"].url
+          delete_task_uri      = google_cloudfunctions2_function.crud["delete_task"].url
+          voice_parse_uri      = google_cloudfunctions2_function.crud["voice_parse"].url
+          admin_analytics_uri  = google_cloudfunctions2_function.crud["admin_analytics"].url
       }))
     }
   }
