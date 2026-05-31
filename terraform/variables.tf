@@ -4,6 +4,11 @@ variable "project_id" {
 }
 
 variable "region" {
-  description = "The region to deploy resources into (Warsaw, Poland)"
+  description = "The main region to deploy resources into (Warsaw, Poland)"
   default     = "europe-central2"
+}
+
+variable "api_gateway_region" {
+  description = "Region for API Gateway (must be a supported gateway region - europe-central2 is not supported)"
+  default     = "europe-west1"
 }
