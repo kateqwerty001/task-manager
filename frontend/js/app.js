@@ -6,6 +6,7 @@ import {
 } from "./auth.js";
 import { setUnauthorizedHandler, isApiConfigured } from "./api.js";
 import { initTasks, loadTasks } from "./tasks.js";
+import { detectAdminAccess, initAdmin, resetAdminState } from "./admin.js";
 import { showToast } from "./ui.js";
 
 function showLogin() {
@@ -34,11 +35,13 @@ function showConfigWarnings() {
 async function onSignedIn() {
   showApp();
   await loadTasks();
+  await detectAdminAccess();
 }
 
 function initSignOut() {
   document.getElementById("sign-out-btn")?.addEventListener("click", () => {
     signOut();
+    resetAdminState();
     showLogin();
     showToast("Signed out.", "info", 2500);
   });
@@ -60,6 +63,7 @@ function init() {
   });
 
   initTasks();
+  initAdmin();
   initSignOut();
 
   const gsiReady = initGoogleSignIn(onSignedIn);

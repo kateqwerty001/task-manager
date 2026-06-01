@@ -41,6 +41,14 @@
           <span class="app-title">Task Manager</span>
         </div>
         <div class="header-right">
+          <nav id="app-nav" class="app-nav" aria-label="Main">
+            <button type="button" id="nav-tasks" class="nav-tab nav-tab-active">
+              Tasks
+            </button>
+            <button type="button" id="nav-analytics" class="nav-tab" hidden>
+              Analytics
+            </button>
+          </nav>
           <span id="user-email" class="user-email"></span>
           <button type="button" id="sign-out-btn" class="btn btn-ghost">
             Sign out
@@ -136,6 +144,61 @@
               </div>
               <ul id="task-list" class="task-list"></ul>
             </section>
+          </div>
+        </section>
+
+        <!-- Admin analytics view -->
+        <section id="view-analytics" class="view" hidden>
+          <div class="analytics-header">
+            <h2>System analytics</h2>
+            <button
+              type="button"
+              id="refresh-analytics-btn"
+              class="btn btn-ghost btn-sm"
+            >
+              Refresh
+            </button>
+          </div>
+
+          <div class="analytics-grid">
+            <div class="stat-card">
+              <span class="stat-label">Total users</span>
+              <span id="stat-total-users" class="stat-value">—</span>
+            </div>
+            <div class="stat-card">
+              <span class="stat-label">Total tasks</span>
+              <span id="stat-total-tasks" class="stat-value">—</span>
+            </div>
+          </div>
+
+          <div class="analytics-breakdown">
+            <div class="panel">
+              <h3>Tasks by status</h3>
+              <ul class="stat-list">
+                <li><span>To do</span><strong id="stat-status-todo">—</strong></li>
+                <li><span>In progress</span><strong id="stat-status-in-progress">—</strong></li>
+                <li><span>Done</span><strong id="stat-status-done">—</strong></li>
+              </ul>
+            </div>
+            <div class="panel">
+              <h3>Tasks by priority</h3>
+              <ul class="stat-list">
+                <li><span>Low</span><strong id="stat-priority-low">—</strong></li>
+                <li><span>Medium</span><strong id="stat-priority-medium">—</strong></li>
+                <li><span>High</span><strong id="stat-priority-high">—</strong></li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="analytics-charts">
+            <div class="panel">
+              <h3>Status chart</h3>
+              <div id="chart-status" class="bar-chart" aria-label="Tasks by status bar chart"></div>
+            </div>
+            <div class="panel">
+              <h3>Priority chart</h3>
+              <div id="chart-priority" class="bar-chart" aria-label="Tasks by priority bar chart"></div>
+            </div>
           </div>
         </section>
       </div>
