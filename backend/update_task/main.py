@@ -42,7 +42,7 @@ def update_task(request):
             204,
             {
                 "Access-Control-Allow-Origin": "*",
-                "Access-Control-Allow-Methods": "PATCH",
+                "Access-Control-Allow-Methods": "GET, PATCH, DELETE",
                 "Access-Control-Allow-Headers": "Authorization, Content-Type",
             },
         )
