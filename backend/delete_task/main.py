@@ -9,7 +9,10 @@ db = firestore.Client(project=os.environ.get("GCP_PROJECT", "local-project"))
 
 
 def verify_token(request):
-    auth_header = request.headers.get("Authorization", "")
+    auth_header = (
+        request.headers.get("X-Forwarded-Authorization")
+        or request.headers.get("Authorization", "")
+    )
     if not auth_header.startswith("Bearer "):
         return None, ({"error": "Missing Authorization header"}, 401)
     token = auth_header[len("Bearer ") :]

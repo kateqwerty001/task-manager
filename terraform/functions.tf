@@ -91,7 +91,7 @@ resource "google_cloudfunctions2_function" "crud" {
     }
 
     dynamic "secret_environment_variables" {
-      for_each = each.key == "voice_parse" && var.enable_llm_api_key ? [1] : []
+      for_each = each.key == "voice_parse" ? [1] : []
       content {
         key        = "LLM_API_KEY"
         project_id = var.project_id
