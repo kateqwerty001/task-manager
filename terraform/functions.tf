@@ -73,7 +73,7 @@ resource "google_cloudfunctions2_function" "crud" {
 
   service_config {
     max_instance_count    = 10
-    min_instance_count    = 0
+    min_instance_count    = 1
     available_memory      = "256Mi"
     timeout_seconds       = 60
     ingress_settings      = "ALLOW_ALL"
