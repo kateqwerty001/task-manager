@@ -13,7 +13,7 @@ LLM_API_KEY = os.environ.get("LLM_API_KEY", "")
 LLM_BASE_URL = os.environ.get(
     "LLM_BASE_URL", "https://generativelanguage.googleapis.com/v1beta/openai/"
 )
-LLM_MODEL = os.environ.get("LLM_MODEL", "gemini-2.5-flash")
+LLM_MODEL = os.environ.get("LLM_MODEL", "gemini-2.5-flash-lite")
 GEMINI_REST_URL = "https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent"
 MAX_CHARS_PROMPT = 1000
 SYSTEM_PROMPT = """
@@ -130,8 +130,11 @@ def _parse_audio(audio_data, mime_type, system_prompt):
     for attempt in range(3):
         try:
             resp = http_requests.post(
-                url, json=payload, params={"key": LLM_API_KEY}, timeout=30
-            )
+                    url,
+                    json=payload,
+                    headers={"x-goog-api-key": LLM_API_KEY},
+                    timeout=30,
+                )
             if resp.status_code == 429:
                 retry_after = int(resp.headers.get("Retry-After", 10))
                 time.sleep(retry_after)
