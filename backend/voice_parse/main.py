@@ -132,6 +132,11 @@ def _parse_audio(audio_data, mime_type, system_prompt):
             resp = http_requests.post(
                 url, json=payload, params={"key": LLM_API_KEY}, timeout=30
             )
+            if resp.status_code == 429:
+                retry_after = int(resp.headers.get("Retry-After", 10))
+                time.sleep(retry_after)
+                last_err = Exception(f"Rate limited (429)")
+                continue
             resp.raise_for_status()
             raw = resp.json()["candidates"][0]["content"]["parts"][0]["text"].strip()
             if raw.startswith("```"):
