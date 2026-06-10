@@ -12,3 +12,5 @@ terraform/.build/get_task.zip
 terraform/.build/list_tasks.zip
 terraform/.build/update_task.zip
 terraform/.build/voice_parse.zip
+
+.firebase/
