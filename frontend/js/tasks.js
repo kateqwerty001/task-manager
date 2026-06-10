@@ -46,9 +46,9 @@ export function initTasks() {
     loadTasks();
   });
 
-  // Keep hidden select change handlers for backward compatibility
   document.getElementById("filter-status")?.addEventListener("change", loadTasks);
   document.getElementById("filter-priority")?.addEventListener("change", loadTasks);
+  document.getElementById("sort-by")?.addEventListener("change", () => renderTaskList(cachedTasks));
   document
     .getElementById("refresh-tasks-btn")
     ?.addEventListener("click", () => loadTasks());
@@ -66,6 +66,16 @@ export function initTasks() {
   // View tabs: List / Calendar
   document.getElementById("tab-list")?.addEventListener("click", () => showView("list"));
   document.getElementById("tab-calendar")?.addEventListener("click", () => showView("calendar"));
+
+  // Calendar chip click → open edit modal; overflow label → list view
+  document.getElementById("cal-grid")?.addEventListener("click", async (e) => {
+    if (e.target.classList.contains("cal-overflow")) {
+      showView("list");
+      return;
+    }
+    const chip = e.target.closest(".cal-task-chip");
+    if (chip?.dataset.id) await openEditModal(chip.dataset.id);
+  });
 
   // Calendar navigation
   document.getElementById("cal-prev")?.addEventListener("click", () => {
@@ -154,7 +164,20 @@ export async function loadTasks() {
 
 function renderTaskList(tasks) {
   const listEl = document.getElementById("task-list");
-  listEl.innerHTML = tasks
+  const sortBy = document.getElementById("sort-by")?.value ?? "priority";
+  const priorityOrder = { high: 0, medium: 1, low: 2 };
+  const sorted = [...tasks].sort((a, b) => {
+    if (a.status === "done" && b.status !== "done") return 1;
+    if (b.status === "done" && a.status !== "done") return -1;
+    if (sortBy === "date") {
+      if (!a.due_date && !b.due_date) return 0;
+      if (!a.due_date) return 1;
+      if (!b.due_date) return -1;
+      return a.due_date.localeCompare(b.due_date);
+    }
+    return (priorityOrder[a.priority] ?? 1) - (priorityOrder[b.priority] ?? 1);
+  });
+  listEl.innerHTML = sorted
     .map((task) => {
       const statusClass = `status-${task.status.replace("_", "-")}`;
       const isDone = task.status === "done";
@@ -170,7 +193,7 @@ function renderTaskList(tasks) {
         .join(" · ");
 
       return `
-        <li class="task-card" data-id="${escapeHtml(task.id)}" data-status="${escapeHtml(task.status)}">
+        <li class="task-card${isDone ? " task-card-done" : ""}" data-id="${escapeHtml(task.id)}" data-status="${escapeHtml(task.status)}">
           <div class="task-card-header">
             <button type="button" class="status-toggle ${statusClass}" aria-label="Cycle status" title="Click to advance status"></button>
             <h3 class="${isDone ? "task-title-done" : ""}">${escapeHtml(task.title)}</h3>
@@ -244,9 +267,18 @@ function renderCalendar(tasks, date) {
     if (isToday) classes.push("cal-today");
     if (hasUnfinishedPast) classes.push("cal-overdue");
 
-    const chips = dayTasks.map(t =>
-      `<span class="cal-task-chip ${t.status === "done" ? "is-done" : ""}" title="${escapeHtml(t.title)}">${escapeHtml(t.title)}</span>`
-    ).join("");
+    const priorityOrder = { high: 0, medium: 1, low: 2 };
+    const sorted = [...dayTasks].sort((a, b) => {
+      if (a.status === "done" && b.status !== "done") return 1;
+      if (b.status === "done" && a.status !== "done") return -1;
+      return (priorityOrder[a.priority] ?? 1) - (priorityOrder[b.priority] ?? 1);
+    });
+    const MAX_CHIPS = 2;
+    const visible = sorted.slice(0, MAX_CHIPS);
+    const overflow = sorted.length - MAX_CHIPS;
+    const chips = visible.map(t =>
+      `<span class="cal-task-chip ${t.status === "done" ? "is-done" : "priority-" + t.priority}" data-id="${escapeHtml(t.id)}" title="${escapeHtml(t.title)}">${escapeHtml(t.title)}</span>`
+    ).join("") + (overflow > 0 ? `<span class="cal-overflow">+${overflow} more</span>` : "");
 
     html += `
       <div class="${classes.join(" ")}">

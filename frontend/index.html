@@ -86,18 +86,27 @@
               <button type="button" id="refresh-tasks-btn" hidden></button>
 
               <div class="filters" id="list-filters">
-                <div class="filter-group" id="filter-status-group">
-                  <button class="filter-pill active" data-value="">All</button>
-                  <button class="filter-pill" data-value="todo">To do</button>
-                  <button class="filter-pill" data-value="in_progress">In progress</button>
-                  <button class="filter-pill" data-value="done">Done</button>
+                <div class="filters-left">
+                  <div class="filter-group" id="filter-status-group">
+                    <button class="filter-pill active" data-value="">All</button>
+                    <button class="filter-pill" data-value="todo">To do</button>
+                    <button class="filter-pill" data-value="in_progress">In progress</button>
+                    <button class="filter-pill" data-value="done">Done</button>
+                  </div>
+                  <div class="filter-divider"></div>
+                  <div class="filter-group" id="filter-priority-group">
+                    <button class="filter-pill active" data-value="">All</button>
+                    <button class="filter-pill" data-value="low">Low</button>
+                    <button class="filter-pill" data-value="medium">Medium</button>
+                    <button class="filter-pill" data-value="high">High</button>
+                  </div>
                 </div>
-                <div class="filter-divider"></div>
-                <div class="filter-group" id="filter-priority-group">
-                  <button class="filter-pill active" data-value="">All</button>
-                  <button class="filter-pill" data-value="low">Low</button>
-                  <button class="filter-pill" data-value="medium">Medium</button>
-                  <button class="filter-pill" data-value="high">High</button>
+                <div class="sort-control">
+                  <label for="sort-by" class="sort-label">Sort by</label>
+                  <select id="sort-by" class="sort-select">
+                    <option value="priority">Priority</option>
+                    <option value="date">Due date</option>
+                  </select>
                 </div>
               </div>
 
