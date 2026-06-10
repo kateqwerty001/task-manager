@@ -4,6 +4,7 @@ from google.oauth2 import id_token
 from google.auth.transport import requests as google_requests
 from google.cloud import firestore
 from google.cloud.firestore_v1.base_query import FieldFilter
+from safe_errors import log_error
 
 GOOGLE_CLIENT_ID = os.environ.get("GOOGLE_CLIENT_ID", "")
 db = firestore.Client(project=os.environ.get("GCP_PROJECT", "local-project"))
@@ -25,7 +26,8 @@ def verify_token(request):
         )
         return info, None
     except Exception as e:
-        return None, ({"error": f"Invalid token: {str(e)}"}, 401)
+        log_error("Token verification failed", e)
+        return None, ({"error": "Invalid or expired token"}, 401)
 
 
 def get_or_create_user(token_info):

@@ -7,6 +7,7 @@ from datetime import date
 from google.oauth2 import id_token
 from google.auth.transport import requests as google_requests
 from openai import OpenAI
+from safe_errors import log_error
 
 GOOGLE_CLIENT_ID = os.environ.get("GOOGLE_CLIENT_ID", "")
 LLM_API_KEY = os.environ.get("LLM_API_KEY", "")
@@ -46,7 +47,8 @@ def verify_token(request):
         )
         return info, None
     except Exception as e:
-        return None, ({"error": f"Invalid token: {str(e)}"}, 401)
+        log_error("Token verification failed", e)
+        return None, ({"error": "Invalid or expired token"}, 401)
 
 
 @functions_framework.http
@@ -84,28 +86,33 @@ def voice_parse(request):
         try:
             parsed = _parse_audio(audio_data, audio_mime_type, system_prompt)
         except Exception as e:
-            return ({"error": f"Audio parsing failed: {str(e)}"}, 500, cors)
+            log_error("Audio parsing failed", e)
+            return ({"error": "Audio parsing failed"}, 500, cors)
     else:
         was_truncated = len(transcript) > MAX_CHARS_PROMPT
         transcript = transcript[:MAX_CHARS_PROMPT]
         if was_truncated:
             transcript += f" [...truncated at {MAX_CHARS_PROMPT} characters...]"
 
-        client = OpenAI(api_key=LLM_API_KEY, base_url=LLM_BASE_URL)
-        response = client.chat.completions.create(
-            model=LLM_MODEL,
-            messages=[
-                {"role": "system", "content": system_prompt},
-                {"role": "user", "content": transcript},
-            ],
-            max_tokens=300,
-            temperature=0,
-        )
-        raw = response.choices[0].message.content.strip()
         try:
+            client = OpenAI(api_key=LLM_API_KEY, base_url=LLM_BASE_URL)
+            response = client.chat.completions.create(
+                model=LLM_MODEL,
+                messages=[
+                    {"role": "system", "content": system_prompt},
+                    {"role": "user", "content": transcript},
+                ],
+                max_tokens=300,
+                temperature=0,
+            )
+            raw = response.choices[0].message.content.strip()
             parsed = json.loads(raw)
         except json.JSONDecodeError:
-            return ({"error": "LLM returned invalid JSON", "raw": raw}, 500, cors)
+            log_error("LLM returned invalid JSON", raw[:500])
+            return ({"error": "LLM returned invalid JSON"}, 500, cors)
+        except Exception as e:
+            log_error("LLM parsing failed", e)
+            return ({"error": "LLM parsing failed"}, 500, cors)
 
     if parsed.get("priority") not in ("low", "medium", "high"):
         parsed["priority"] = "medium"

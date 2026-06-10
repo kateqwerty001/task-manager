@@ -32,13 +32,27 @@ locals {
   }
 }
 
-# Zip each function directory into a build artifact
+# Zip each function directory into a build artifact (includes shared safe_errors.py)
 resource "archive_file" "function_zip" {
   for_each = local.crud_functions
 
   type        = "zip"
-  source_dir  = each.value.source_dir
   output_path = "${path.module}/.build/${each.key}.zip"
+
+  source {
+    content  = file("${each.value.source_dir}/main.py")
+    filename = "main.py"
+  }
+
+  source {
+    content  = file("${each.value.source_dir}/requirements.txt")
+    filename = "requirements.txt"
+  }
+
+  source {
+    content  = file("${path.module}/../backend/common/safe_errors.py")
+    filename = "safe_errors.py"
+  }
 }
 
 # Upload zips to GCS with MD5 hashing to ensure deployment only on code changes
