@@ -182,6 +182,21 @@
           <button type="button" class="btn-icon" id="create-modal-close" aria-label="Close">×</button>
         </header>
 
+        <div class="voice-section">
+          <div class="voice-row">
+            <button type="button" id="voice-btn" class="voice-btn" aria-label="Start voice input">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
+                <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+                <line x1="12" y1="19" x2="12" y2="23"/>
+                <line x1="8" y1="23" x2="16" y2="23"/>
+              </svg>
+            </button>
+            <span class="voice-hint-text">Tap the mic, describe your task, tap again to stop — AI fills in the fields</span>
+          </div>
+          <p class="voice-status" id="voice-status" hidden></p>
+        </div>
+
         <label for="create-title">Title <span class="required">*</span></label>
         <input
           id="create-title"

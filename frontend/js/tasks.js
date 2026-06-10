@@ -13,6 +13,10 @@ let editingTaskId = null;
 let calendarDate = new Date();
 let cachedTasks = [];
 
+let mediaRecorder = null;
+let voiceActive = false;
+let audioChunks = [];
+
 export function initTasks() {
   document
     .getElementById("create-task-form")
@@ -56,6 +60,8 @@ export function initTasks() {
 
   document.getElementById("edit-modal-close")?.addEventListener("click", closeEditModal);
   document.getElementById("edit-cancel-btn")?.addEventListener("click", closeEditModal);
+
+  initVoice();
 
   // View tabs: List / Calendar
   document.getElementById("tab-list")?.addEventListener("click", () => showView("list"));
@@ -262,11 +268,105 @@ function renderCalendar(tasks, date) {
 function openCreateModal() {
   const modal = document.getElementById("create-modal");
   document.getElementById("create-task-form")?.reset();
+  stopVoice();
+  setVoiceStatus("");
   modal?.showModal();
 }
 
 function closeCreateModal() {
+  stopVoice();
   document.getElementById("create-modal")?.close();
+}
+
+function initVoice() {
+  const btn = document.getElementById("voice-btn");
+  if (!btn) return;
+
+  if (!navigator.mediaDevices?.getUserMedia) {
+    document.querySelector(".voice-section")?.remove();
+    return;
+  }
+
+  btn.addEventListener("click", () => {
+    if (voiceActive) {
+      stopVoice();
+    } else {
+      startVoice();
+    }
+  });
+}
+
+async function startVoice() {
+  const btn = document.getElementById("voice-btn");
+  let stream;
+  try {
+    stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+  } catch {
+    showToast("Microphone access denied", "error");
+    return;
+  }
+
+  audioChunks = [];
+  mediaRecorder = new MediaRecorder(stream);
+
+  mediaRecorder.ondataavailable = (e) => {
+    if (e.data.size > 0) audioChunks.push(e.data);
+  };
+
+  mediaRecorder.onstop = async () => {
+    stream.getTracks().forEach((t) => t.stop());
+    const mimeType = mediaRecorder.mimeType.split(";")[0];
+    const blob = new Blob(audioChunks, { type: mimeType });
+    setVoiceStatus("Processing…");
+    await parseVoiceAudio(blob, mimeType);
+  };
+
+  voiceActive = true;
+  btn?.classList.add("voice-btn-active");
+  setVoiceStatus("Recording… click mic again to stop");
+  mediaRecorder.start();
+}
+
+function stopVoice() {
+  voiceActive = false;
+  document.getElementById("voice-btn")?.classList.remove("voice-btn-active");
+  if (mediaRecorder && mediaRecorder.state !== "inactive") {
+    mediaRecorder.stop();
+  }
+}
+
+function setVoiceStatus(text) {
+  const el = document.getElementById("voice-status");
+  if (!el) return;
+  el.textContent = text;
+  el.hidden = !text;
+}
+
+function blobToBase64(blob) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result.split(",")[1]);
+    reader.onerror = reject;
+    reader.readAsDataURL(blob);
+  });
+}
+
+async function parseVoiceAudio(blob, mimeType) {
+  try {
+    const audioData = await blobToBase64(blob);
+    const parsed = await apiFetch("/voice/parse", "POST", {
+      audio_data: audioData,
+      audio_mime_type: mimeType,
+    });
+    if (parsed.title) document.getElementById("create-title").value = parsed.title;
+    if (parsed.description) document.getElementById("create-description").value = parsed.description;
+    if (parsed.priority) document.getElementById("create-priority").value = parsed.priority;
+    if (parsed.due_date) document.getElementById("create-due_date").value = parsed.due_date;
+    setVoiceStatus("Done — review and adjust the fields below");
+  } catch (err) {
+    showToast(err.message, "error");
+    setVoiceStatus("");
+  }
 }
 
 async function onCreateSubmit(e) {
