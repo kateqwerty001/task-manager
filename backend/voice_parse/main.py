@@ -114,6 +114,7 @@ def voice_parse(request):
 
 
 def _parse_audio(audio_data, mime_type, system_prompt):
+    import time
     url = GEMINI_REST_URL.format(model=LLM_MODEL)
     payload = {
         "system_instruction": {"parts": [{"text": system_prompt}]},
@@ -125,14 +126,21 @@ def _parse_audio(audio_data, mime_type, system_prompt):
         }],
         "generationConfig": {"temperature": 0, "maxOutputTokens": 300},
     }
-    resp = http_requests.post(
-        url, json=payload, params={"key": LLM_API_KEY}, timeout=30
-    )
-    resp.raise_for_status()
-    raw = resp.json()["candidates"][0]["content"]["parts"][0]["text"].strip()
-    # Strip markdown code fences if the model wraps with them
-    if raw.startswith("```"):
-        raw = raw.split("```")[1]
-        if raw.startswith("json"):
-            raw = raw[4:]
-    return json.loads(raw.strip())
+    last_err = None
+    for attempt in range(3):
+        try:
+            resp = http_requests.post(
+                url, json=payload, params={"key": LLM_API_KEY}, timeout=30
+            )
+            resp.raise_for_status()
+            raw = resp.json()["candidates"][0]["content"]["parts"][0]["text"].strip()
+            if raw.startswith("```"):
+                raw = raw.split("```")[1]
+                if raw.startswith("json"):
+                    raw = raw[4:]
+            return json.loads(raw.strip())
+        except Exception as e:
+            last_err = e
+            if attempt < 2:
+                time.sleep(2 ** attempt)
+    raise last_err
