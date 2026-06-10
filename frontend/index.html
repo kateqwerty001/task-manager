@@ -8,7 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=JetBrains+Mono:wght@400;500&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
       rel="stylesheet"
     />
   </head>
@@ -17,14 +17,9 @@
 
     <!-- Guest: login only -->
     <main id="login-screen" class="login-screen">
-      <div class="login-card">
-        <div class="brand">
-          <span class="brand-icon" aria-hidden="true">✓</span>
-          <h1>Task Manager</h1>
-        </div>
-        <p class="login-tagline">
-          Sign in with Google to manage your personal tasks in the cloud.
-        </p>
+      <div class="login-center">
+        <span class="login-eyebrow">Task Manager</span>
+        <h1 class="login-hero">Plan your future.</h1>
         <div id="sign-in-btn" class="sign-in-container"></div>
         <p id="config-warning" class="config-warning" hidden>
           Set <code>GOOGLE_CLIENT_ID</code> and <code>API_BASE_URL</code> in
@@ -37,7 +32,6 @@
     <div id="app" class="app" hidden>
       <header class="app-header">
         <div class="header-left">
-          <span class="brand-icon small" aria-hidden="true">✓</span>
           <span class="app-title">Task Manager</span>
         </div>
         <div class="header-right">
@@ -50,7 +44,7 @@
             </button>
           </nav>
           <span id="user-email" class="user-email"></span>
-          <button type="button" id="sign-out-btn" class="btn btn-ghost">
+          <button type="button" id="sign-out-btn" class="btn-link">
             Sign out
           </button>
         </div>
@@ -64,87 +58,63 @@
 
         <!-- Tasks view -->
         <section id="view-tasks" class="view">
-          <div class="tasks-layout">
-            <aside class="panel create-panel">
-              <h2>Create task</h2>
-              <form id="create-task-form" class="task-form">
-                <label for="title">Title <span class="required">*</span></label>
-                <input
-                  id="title"
-                  name="title"
-                  type="text"
-                  required
-                  maxlength="100"
-                  placeholder="What needs to be done?"
-                  autocomplete="off"
-                />
-
-                <label for="description">Description</label>
-                <textarea
-                  id="description"
-                  name="description"
-                  rows="3"
-                  maxlength="1000"
-                  placeholder="Optional details"
-                ></textarea>
-
-                <div class="form-row">
-                  <div class="field">
-                    <label for="priority">Priority</label>
-                    <select id="priority" name="priority">
-                      <option value="low">Low</option>
-                      <option value="medium" selected>Medium</option>
-                      <option value="high">High</option>
-                    </select>
-                  </div>
-                  <div class="field">
-                    <label for="due_date">Due date</label>
-                    <input id="due_date" name="due_date" type="date" />
-                  </div>
-                </div>
-
-                <div class="form-actions">
-                  <button type="submit" class="btn btn-primary" id="create-btn">
-                    Create task
-                  </button>
-                </div>
-              </form>
-            </aside>
-
-            <section class="panel list-panel">
+            <section class="list-panel">
               <div class="list-header">
                 <h2>Your tasks</h2>
-                <div class="filters">
-                  <label class="sr-only" for="filter-status">Status</label>
-                  <select id="filter-status" aria-label="Filter by status">
-                    <option value="">All statuses</option>
-                    <option value="todo">To do</option>
-                    <option value="in_progress">In progress</option>
-                    <option value="done">Done</option>
-                  </select>
-                  <label class="sr-only" for="filter-priority">Priority</label>
-                  <select id="filter-priority" aria-label="Filter by priority">
-                    <option value="">All priorities</option>
-                    <option value="low">Low</option>
-                    <option value="medium">Medium</option>
-                    <option value="high">High</option>
-                  </select>
-                  <button
-                    type="button"
-                    id="refresh-tasks-btn"
-                    class="btn btn-ghost btn-sm"
-                  >
-                    Refresh
-                  </button>
+                <div class="list-header-actions">
+                  <div class="view-tabs">
+                    <button class="view-tab view-tab-active" id="tab-list">List</button>
+                    <button class="view-tab" id="tab-calendar">Calendar</button>
+                  </div>
+                  <button type="button" id="add-task-btn" class="btn btn-add">Add task</button>
+                </div>
+              </div>
+
+              <!-- Hidden selects kept for JS filter logic -->
+              <select id="filter-status" hidden aria-label="Filter by status">
+                <option value="">All statuses</option>
+                <option value="todo">To do</option>
+                <option value="in_progress">In progress</option>
+                <option value="done">Done</option>
+              </select>
+              <select id="filter-priority" hidden aria-label="Filter by priority">
+                <option value="">All priorities</option>
+                <option value="low">Low</option>
+                <option value="medium">Medium</option>
+                <option value="high">High</option>
+              </select>
+              <button type="button" id="refresh-tasks-btn" hidden></button>
+
+              <div class="filters" id="list-filters">
+                <div class="filter-group" id="filter-status-group">
+                  <button class="filter-pill active" data-value="">All</button>
+                  <button class="filter-pill" data-value="todo">To do</button>
+                  <button class="filter-pill" data-value="in_progress">In progress</button>
+                  <button class="filter-pill" data-value="done">Done</button>
+                </div>
+                <div class="filter-divider"></div>
+                <div class="filter-group" id="filter-priority-group">
+                  <button class="filter-pill active" data-value="">All</button>
+                  <button class="filter-pill" data-value="low">Low</button>
+                  <button class="filter-pill" data-value="medium">Medium</button>
+                  <button class="filter-pill" data-value="high">High</button>
                 </div>
               </div>
 
               <div id="task-list-empty" class="empty-state" hidden>
-                <p>No tasks yet. Create your first task above.</p>
+                <p>No tasks yet.</p>
               </div>
               <ul id="task-list" class="task-list"></ul>
+
+              <div id="calendar-view" hidden>
+                <div class="cal-nav">
+                  <button class="btn-icon" id="cal-prev">&#8249;</button>
+                  <span id="cal-month-label" class="cal-month-label"></span>
+                  <button class="btn-icon" id="cal-next">&#8250;</button>
+                </div>
+                <div id="cal-grid" class="cal-grid"></div>
+              </div>
             </section>
-          </div>
         </section>
 
         <!-- Admin analytics view -->
@@ -203,6 +173,58 @@
         </section>
       </div>
     </div>
+
+    <!-- Create task modal -->
+    <dialog id="create-modal" class="modal">
+      <form id="create-task-form" class="modal-content" method="dialog">
+        <header class="modal-header">
+          <h2>New task</h2>
+          <button type="button" class="btn-icon" id="create-modal-close" aria-label="Close">×</button>
+        </header>
+
+        <label for="create-title">Title <span class="required">*</span></label>
+        <input
+          id="create-title"
+          name="title"
+          type="text"
+          required
+          maxlength="100"
+          placeholder="What needs to be done?"
+          autocomplete="off"
+          class="modal-input"
+        />
+
+        <label for="create-description">Description</label>
+        <textarea
+          id="create-description"
+          name="description"
+          rows="3"
+          maxlength="1000"
+          placeholder="Optional details"
+          class="modal-input"
+        ></textarea>
+
+        <div class="form-row">
+          <div class="field">
+            <label for="create-priority">Priority</label>
+            <select id="create-priority" name="priority" class="modal-input">
+              <option value="low">Low</option>
+              <option value="medium" selected>Medium</option>
+              <option value="high">High</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="create-due_date">Due date</label>
+            <input id="create-due_date" name="due_date" type="date" class="modal-input" />
+          </div>
+        </div>
+
+        <footer class="modal-footer">
+          <button type="button" class="btn btn-ghost" id="create-cancel-btn">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="create-btn">Add task</button>
+        </footer>
+      </form>
+    </dialog>
 
     <!-- Edit task modal -->
     <dialog id="edit-modal" class="modal">

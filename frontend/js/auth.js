@@ -46,7 +46,7 @@ export function initGoogleSignIn(onSignedIn) {
     const container = document.getElementById("sign-in-btn");
     if (container) {
       google.accounts.id.renderButton(container, {
-        theme: "filled_blue",
+        theme: "filled_black",
         size: "large",
         text: "signin_with",
         shape: "rectangular",
