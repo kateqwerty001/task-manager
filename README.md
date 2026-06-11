@@ -167,12 +167,6 @@ gcloud logging read \
   --limit=20
 ```
 
-## Local Development
-
-- **Frontend:** serve `frontend/index.html` via a local server or the Firebase Hosting emulator
-- **Backend:** run a single function with `functions-framework`, set `SKIP_AUTH=true` to bypass OAuth
-- Configure `GOOGLE_CLIENT_ID` and `API_BASE_URL` in `frontend/js/config.js`
-
 ## Tech Stack
 
 | Layer | Stack |
