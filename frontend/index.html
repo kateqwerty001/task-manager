@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Task Manager</title>
-    <link rel="stylesheet" href="css/styles.css?v=2" />
+    <link rel="stylesheet" href="css/styles.css?v=3" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -229,6 +229,8 @@
           <button type="button" class="btn-icon" id="create-modal-close" aria-label="Close">×</button>
         </header>
 
+        <div id="create-modal-error" class="modal-error" role="alert" hidden></div>
+
         <div class="voice-section">
           <div class="voice-row">
             <button type="button" id="voice-btn" class="voice-btn" aria-label="Start voice input">
@@ -302,6 +304,9 @@
             ×
           </button>
         </header>
+
+        <div id="edit-modal-error" class="modal-error" role="alert" hidden></div>
+
         <input type="hidden" id="edit-task-id" />
 
         <label for="edit-title">Title</label>

@@ -4,8 +4,10 @@ import {
   formatTimestamp,
   labelPriority,
   labelStatus,
+  clearModalError,
   setButtonsDisabled,
   setGlobalLoading,
+  showModalError,
   showToast,
 } from "./ui.js";
 
@@ -299,6 +301,7 @@ function renderCalendar(tasks, date) {
 
 function openCreateModal() {
   const modal = document.getElementById("create-modal");
+  clearModalError("create-modal-error");
   document.getElementById("create-task-form")?.reset();
   stopVoice();
   setVoiceStatus("");
@@ -334,7 +337,7 @@ async function startVoice() {
   try {
     stream = await navigator.mediaDevices.getUserMedia({ audio: true });
   } catch {
-    showToast("Microphone access denied", "error");
+    showModalError("create-modal-error", "Microphone access denied");
     return;
   }
 
@@ -396,7 +399,7 @@ async function parseVoiceAudio(blob, mimeType) {
     if (parsed.due_date) document.getElementById("create-due_date").value = parsed.due_date;
     setVoiceStatus("Done — review and adjust the fields below");
   } catch (err) {
-    showToast(err.message, "error");
+    showModalError("create-modal-error", err.message);
     setVoiceStatus("");
   }
 }
@@ -423,7 +426,7 @@ async function onCreateSubmit(e) {
     showToast("Task created.", "success");
     await loadTasks();
   } catch (err) {
-    showToast(err.message, "error");
+    showModalError("create-modal-error", err.message);
   } finally {
     setButtonsDisabled(false, form);
   }
@@ -483,6 +486,7 @@ async function openEditModal(taskId) {
     document.getElementById("edit-status").value = task.status || "todo";
     document.getElementById("edit-due_date").value = task.due_date || "";
 
+    clearModalError("edit-modal-error");
     document.getElementById("edit-modal").showModal();
   } catch (err) {
     showToast(err.message, "error");
@@ -516,7 +520,7 @@ async function onEditSubmit(e) {
     showToast("Task updated.", "success");
     await loadTasks();
   } catch (err) {
-    showToast(err.message, "error");
+    showModalError("edit-modal-error", err.message);
   } finally {
     setButtonsDisabled(false, document.getElementById("edit-task-form"));
   }

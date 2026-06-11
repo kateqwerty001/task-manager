@@ -1,5 +1,19 @@
 let toastTimer = null;
 
+export function showModalError(elementId, message) {
+  const el = document.getElementById(elementId);
+  if (!el) return;
+  el.textContent = message;
+  el.hidden = false;
+}
+
+export function clearModalError(elementId) {
+  const el = document.getElementById(elementId);
+  if (!el) return;
+  el.textContent = "";
+  el.hidden = true;
+}
+
 export function showToast(message, type = "info", durationMs = 4000) {
   const el = document.getElementById("toast");
   if (!el) return;

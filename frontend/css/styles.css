@@ -774,6 +774,17 @@ textarea {
   border-top: 1px solid var(--border);
 }
 
+.modal-error {
+  margin-bottom: 1rem;
+  padding: 0.65rem 0.875rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #b91c1c;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: var(--radius);
+}
+
 .list-header-actions {
   display: flex;
   align-items: center;
