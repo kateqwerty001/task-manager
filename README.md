@@ -178,3 +178,51 @@ gcloud logging read \
 | Auth | Google OAuth 2.0 (ID Token) |
 | IaC | Terraform |
 | API | Cloud API Gateway (OpenAPI 2.0) |
+
+## SLA, SLO, SLI
+
+### Core Task API
+
+#### SLA
+
+The Task Manager API will be available at least **99%** of the time per calendar month, excluding scheduled maintenance.
+
+If monthly availability falls below 99%, affected users will receive **one Ferrero Rocher chocolate** as compensation.
+
+#### SLO
+
+| SLO | Target | Measurement Window |
+|-----|--------|-------------------|
+| Availability | at least 99.5% requests succeed | per calendar month |
+| p95 Latency | 95% of requests respond in less than 2 seconds | per calendar month |
+
+#### SLI
+
+| SLI | Metric | How to collect |
+|-----|--------|----------------|
+| Availability | % of HTTP requests returning successful responses | Cloud Monitoring — Cloud Functions request count, filter by response code |
+| Latency | response time of requests | Cloud Monitoring — Cloud Functions latency distribution |
+
+---
+
+### Voice Assistant
+
+#### SLA
+
+The voice assistant will successfully return task fields within **2 minutes** for at least **95%** of requests per calendar month.
+
+If the monthly p95 latency target is missed, affected users will receive **two Ferrero Rocher chocolates** as compensation.
+
+#### SLO
+
+| SLO | Target | Measurement Window |
+|-----|--------|-------------------|
+| Availability | at least 99% of succeeded auto-filling requests | per calendar month |
+| p95 End-to-End Latency | form auto-fill completes in less than 2 minutes for 95% of requests | per calendar month |
+
+#### SLI
+
+| SLI | Metric | How to collect |
+|-----|--------|----------------|
+| Availability | % of auto-filling requests returning successful responses | Cloud Monitoring — Cloud Functions request count |
+| End-to-End Latency | time from transcript submission to auto-filled fields | Client-side timer logged to Cloud Logging |
