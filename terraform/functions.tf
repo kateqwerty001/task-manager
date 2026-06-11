@@ -1,4 +1,4 @@
-# Define the map of functions to be deployed with their source paths and entry points
+# The map of functions to be deployed with their source paths and entry points
 locals {
   crud_functions = {
     list_tasks = {
@@ -32,7 +32,7 @@ locals {
   }
 }
 
-# Zip each function directory into a build artifact (includes shared safe_errors.py)
+# Zip each function directory into a build artifact
 resource "archive_file" "function_zip" {
   for_each = local.crud_functions
 
