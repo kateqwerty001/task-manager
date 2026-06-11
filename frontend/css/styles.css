@@ -145,6 +145,7 @@ body {
 .header-left {
   display: flex;
   align-items: center;
+  gap: 0.5rem;
 }
 
 .app-title {
@@ -152,6 +153,122 @@ body {
   font-size: 0.875rem;
   letter-spacing: -0.01em;
   color: var(--text);
+}
+
+/* ─── SLA info tooltip ──────────────────────────────────────────────────────── */
+
+.sla-info {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.sla-info-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.125rem;
+  height: 1.125rem;
+  padding: 0;
+  font-family: inherit;
+  font-size: 0.65rem;
+  font-weight: 600;
+  font-style: italic;
+  line-height: 1;
+  color: var(--muted);
+  background: transparent;
+  border: 1.5px solid var(--muted);
+  border-radius: 50%;
+  cursor: help;
+  transition: color 0.15s, border-color 0.15s, background 0.15s;
+}
+
+.sla-info-btn:hover,
+.sla-info:focus-within .sla-info-btn {
+  color: var(--text);
+  border-color: var(--text);
+  background: var(--surface);
+}
+
+.sla-tooltip {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 100;
+  width: min(42rem, calc(100vw - 2rem));
+  padding: 0.625rem 0 0;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-4px);
+  transition: opacity 0.15s ease, transform 0.15s ease, visibility 0.15s;
+}
+
+.sla-info:hover .sla-tooltip,
+.sla-info:focus-within .sla-tooltip {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.sla-tooltip-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  background: #ffffff;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.sla-card {
+  padding: 1.25rem 1.5rem;
+  background: #eef6fc;
+  color: var(--text);
+}
+
+.sla-card + .sla-card {
+  border-left: 1px solid var(--border);
+}
+
+.sla-card-title {
+  margin: 0 0 0.35rem;
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.sla-card-label {
+  margin: 0 0 0.75rem;
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+.sla-card p {
+  margin: 0 0 0.65rem;
+  font-size: 0.8rem;
+  line-height: 1.45;
+  color: #1a1a1a;
+}
+
+.sla-card p:last-child {
+  margin-bottom: 0;
+}
+
+@media (max-width: 640px) {
+  .sla-tooltip {
+    left: -0.5rem;
+    width: min(22rem, calc(100vw - 1.5rem));
+  }
+
+  .sla-tooltip-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .sla-card + .sla-card {
+    border-left: none;
+    border-top: 1px solid var(--border);
+  }
 }
 
 .header-right {

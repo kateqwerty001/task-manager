@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Task Manager</title>
-    <link rel="stylesheet" href="css/styles.css" />
+    <link rel="stylesheet" href="css/styles.css?v=2" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -33,6 +33,44 @@
       <header class="app-header">
         <div class="header-left">
           <span class="app-title">Task Manager</span>
+          <div class="sla-info">
+            <button
+              type="button"
+              class="sla-info-btn"
+              aria-label="Service level agreements"
+              aria-describedby="sla-tooltip"
+            >
+              <span aria-hidden="true">i</span>
+            </button>
+            <div id="sla-tooltip" class="sla-tooltip" role="tooltip">
+              <div class="sla-tooltip-grid">
+                <div class="sla-card">
+                  <h3 class="sla-card-title">Core Task API</h3>
+                  <p class="sla-card-label">SLA</p>
+                  <p>
+                    The Task Manager API will be available at least 99% of the time per
+                    calendar month, excluding scheduled maintenance.
+                  </p>
+                  <p>
+                    If monthly availability falls below 99%, affected users will receive
+                    one Ferrero Rocher chocolate as compensation.
+                  </p>
+                </div>
+                <div class="sla-card">
+                  <h3 class="sla-card-title">Voice Assistant</h3>
+                  <p class="sla-card-label">SLA</p>
+                  <p>
+                    The voice assistant will successfully return task fields within 2
+                    minutes for at least 95% of requests per calendar month.
+                  </p>
+                  <p>
+                    If the monthly p95 latency target is missed, affected users will
+                    receive two Ferrero Rocher chocolates as compensation.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
         <div class="header-right">
           <nav id="app-nav" class="app-nav" aria-label="Main">
