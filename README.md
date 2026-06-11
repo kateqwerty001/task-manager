@@ -135,7 +135,7 @@ Output values after `terraform apply`:
 
 ### 1. Secrets in Secret Manager
 
-Before the first deploy, add secret values (if not already set):
+Before the first deploy,  secret values were added:
 
 ```bash
 echo -n "YOUR_GEMINI_API_KEY" | gcloud secrets versions add llm-api-key --data-file=-
@@ -150,7 +150,7 @@ terraform init
 terraform apply
 ```
 
-After apply, copy `api_gateway_url` into `frontend/js/config.js` → `API_BASE_URL`.
+After apply, `api_gateway_url` was copied into `frontend/js/config.js` → `API_BASE_URL`.
 
 ### 3. Frontend (Firebase Hosting)
 
