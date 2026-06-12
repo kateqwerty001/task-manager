@@ -1,6 +1,7 @@
 # Task Manager
 
-A serverless task management web app on Google Cloud Platform. Users sign in with Google OAuth, create and edit tasks, filter by status and priority, add tasks by voice (powered by Gemini), and view analytics (admin only).
+A serverless task management web app on Google Cloud Platform. Users sign in with Google OAuth, create and edit tasks, filter by status and priority, add tasks by voice (powered by Gemini), and view analytics (admin only). <br>
+[Demo Link](https://project-f030ec6e-8d7b-4d6a-9e3.web.app/)
 
 ## Architecture
 
